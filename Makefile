@@ -9,7 +9,6 @@ deploy:
 	git checkout master
 	rm -fR *
 	cp -r /tmp/blog/* .
-	echo "blog.codegram.com" > CNAME
 	git add --all
 	git commit -m "Update blog"
 	git push -f origin master

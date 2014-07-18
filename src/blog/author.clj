@@ -1,13 +1,12 @@
 (ns blog.author
   (:require [clavatar.core :as g]))
 
-(def ^:private authors { "txustice" { :name "Josep M. Bach (Txus)"
+(def ^:private authors { "txustice" { :name "Txus"
                                       :twitter "txustice"
                                       :github "txus"
                                       :email "josep.m.bach@gmail.com" }})
 
 (defn full-name [id]
-  (println id)
   (get-in authors [id :name]))
 
 (defn gravatar-url [id]

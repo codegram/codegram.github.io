@@ -13,7 +13,9 @@
                  [optimus "0.14.2"]
                  [clj-yaml "0.4.0"]
                  [clj-time "0.7.0"]
-                 [midje "1.6.0"]]
+                 [midje "1.6.0"]
+                 [clavatar "0.2.1"]
+                 [org.clojure/data.xml "0.0.7"]]
   :ring {:handler blog.core/app}
   :plugins [[lein-midje "3.1.3"]]
   :aliases {"build-site" ["run" "-m" "blog.core/export"]}

@@ -56,15 +56,26 @@
           (map #(fn [req] (layout-page req (md/to-html % [:autolinks :fenced-code-blocks :strikethrough])))
                (vals pages))))
 
+(defn render-posts [req posts]
+  (->> posts
+       (map (fn [post] ((post/to-markdown (fn [_ page] page) post) req)))
+       (interpose "<hr/>")
+       (reduce str)))
+
 (defn markdown-index [index posts]
   (let [render-index (fn [req]
-                       (let [rendered-posts (->> posts
-                                                 (map (fn [post] ((post/to-markdown (fn [_ page] page) post) req)))
-                                                 (interpose "<hr/>")
-                                                 (reduce str)
+                       (let [rendered-posts (->> (render-posts req posts)
                                                  (str (md/to-html index [:autolinks])))]
                          (layout-page req rendered-posts)))]
     {"/index.html" render-index}))
+
+(defn markdown-posts-by-author [all-posts]
+  (->> all-posts
+       (group-by :author)
+       (reduce (fn [acc [author posts]]
+                 (conj acc { (str "/" author) (fn [req] (let [rendered (->> (render-posts req posts)
+                                                                            (str "Posts by " author ".<hr/>"))]
+                                                          (layout-page req rendered))) })) {})))
 
 (defn prepare-page [page req]
   (-> (if (string? page) page (page req))
@@ -82,6 +93,8 @@
        (stasis/slurp-directory "resources/public" #".*\.(html|css|js)$")
        :index
        (markdown-index (slurp "resources/index.md") posts)
+       :posts-by-author
+       (markdown-posts-by-author posts)
        :partials
        (markdown-pages (stasis/slurp-directory "resources/partials" #".*\.(md|markdown)"))
        :posts

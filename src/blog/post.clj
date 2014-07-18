@@ -37,9 +37,8 @@
     (f/unparse formatter date)))
 
 (defn author-link [id]
-  (let [full-name (author/full-name id)
-        twitter-url (author/twitter-url id)]
-    (str "<a href=\"" twitter-url "\">" full-name "</a>")))
+  (let [full-name (author/full-name id)]
+    (str "<a href=\"/" id "\">" full-name "</a>")))
 
 (defn to-markdown [layout post]
   (let [human-date (->> post :date format-date)
